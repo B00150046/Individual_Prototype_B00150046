@@ -7,60 +7,62 @@
     android:layout_height="match_parent"
     tools:context=".RegisterActivity">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Books Galore!"
-        android:textSize="34sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.497"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.15" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:orientation="vertical">
 
-    <Button
-        android:id="@+id/button_register"
-        android:layout_width="125dp"
-        android:layout_height="50dp"
-        android:text="Register"
-        tools:layout_editor_absoluteX="143dp"
-        tools:layout_editor_absoluteY="419dp" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginVertical="10dp"
+            android:text="Books Galore!"
+            android:textSize="34sp"/>
 
-    <Button
-        android:id="@+id/button_login"
-        android:layout_width="125dp"
-        android:layout_height="50dp"
-        android:text="Login"
-        android:textColorLink="#04FFFFFF"
-        tools:layout_editor_absoluteX="143dp"
-        tools:layout_editor_absoluteY="633dp" />
+        <EditText
+            android:id="@+id/editTextText"
+            android:layout_width="298dp"
+            android:layout_height="45dp"
+            android:layout_gravity="center"
+            android:layout_marginVertical="10dp"
+            android:ems="10"
+            android:inputType="text"
+            android:text="Name" />
 
-    <EditText
-        android:id="@+id/editTextTextPassword"
-        android:layout_width="295dp"
-        android:layout_height="45dp"
-        android:ems="10"
-        android:inputType="textPassword"
-        tools:layout_editor_absoluteX="58dp"
-        tools:layout_editor_absoluteY="343dp" />
+        <EditText
+            android:id="@+id/editTextTextPassword"
+            android:layout_width="295dp"
+            android:layout_height="45dp"
+            android:layout_gravity="center"
+            android:layout_marginVertical="10dp"
+            android:ems="10"
+            android:inputType="textPassword" />
 
-    <EditText
-        android:id="@+id/editTextText"
-        android:layout_width="298dp"
-        android:layout_height="45dp"
-        android:ems="10"
-        android:inputType="text"
-        android:text="Name"
-        tools:layout_editor_absoluteX="58dp"
-        tools:layout_editor_absoluteY="259dp" />
+        <Button
+            android:id="@+id/button_register"
+            android:layout_width="125dp"
+            android:layout_height="50dp"
+            android:layout_gravity="center"
+            android:layout_marginVertical="10dp"
+            android:text="Register" />
 
-    <TextView
-        android:id="@+id/textView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Already have an account?"
-        tools:layout_editor_absoluteX="126dp"
-        tools:layout_editor_absoluteY="598dp" />
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginVertical="10dp"
+            android:text="Already have an account?" />
+        <Button
+            android:id="@+id/button_login"
+            android:layout_width="125dp"
+            android:layout_height="50dp"
+            android:layout_gravity="center"
+            android:layout_marginVertical="10dp"
+            android:text="Login"
+            android:textColorLink="#04FFFFFF" />
+    </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
