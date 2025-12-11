@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/light_blue"
     tools:context=".DashboardActivity">
 
     <com.google.android.material.appbar.AppBarLayout
@@ -19,6 +20,7 @@
             style="@style/Widget.MaterialComponents.Toolbar.Primary"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
+            android:background="@color/dark_blue"
             app:title="Dashboard">
 
             <ImageView
@@ -33,7 +35,7 @@
                 android:focusable="true"
                 android:padding="4dp"
                 android:src="@android:drawable/ic_menu_myplaces"
-                app:tint="?attr/colorOnPrimary" />
+                app:tint="@color/white" />
         </com.google.android.material.appbar.MaterialToolbar>
 
     </com.google.android.material.appbar.AppBarLayout>
@@ -59,6 +61,7 @@
                 android:layout_marginTop="16dp"
                 android:layout_marginEnd="16dp"
                 android:text="Good Morning, [User]!"
+                android:textColor="@color/dark_blue"
                 android:textSize="24sp"
                 android:textStyle="bold"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -72,33 +75,22 @@
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="24dp"
                 android:text="Recommended For You"
+                android:textColor="@color/dark_blue"
                 android:textSize="18sp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/welcome_text" />
 
-            <HorizontalScrollView
-                android:id="@+id/recommended_scroll"
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recommended_recycler_view"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
+                android:orientation="horizontal"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/recommended_title">
-
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:paddingStart="16dp"
-                    android:paddingEnd="16dp">
-
-                    <!-- Book items would be dynamically added here -->
-                    <include layout="@layout/book_item" />
-                    <include layout="@layout/book_item" />
-                    <include layout="@layout/book_item" />
-                    <include layout="@layout/book_item" />
-                </LinearLayout>
-            </HorizontalScrollView>
+                app:layout_constraintTop_toBottomOf="@+id/recommended_title"
+                tools:listitem="@layout/book_item" />
 
             <TextView
                 android:id="@+id/continue_reading_title"
@@ -107,9 +99,10 @@
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="16dp"
                 android:text="Continue Reading"
+                android:textColor="@color/dark_blue"
                 android:textSize="18sp"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/recommended_scroll" />
+                app:layout_constraintTop_toBottomOf="@id/recommended_recycler_view" />
 
             <HorizontalScrollView
                 android:id="@+id/continue_reading_scroll"
@@ -132,6 +125,18 @@
                     <include layout="@layout/book_item" />
                 </LinearLayout>
             </HorizontalScrollView>
+
+            <Button
+                android:id="@+id/recommender_button"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="16dp"
+                android:text="Get a Recommendation"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/continue_reading_scroll" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>

@@ -5,49 +5,61 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/light_blue"
     tools:context=".LoginActivity">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:gravity="center"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:padding="16dp">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_marginVertical="10dp"
-            android:text="Books Galore!"
-            android:textSize="34sp" />
+            android:text="Welcome Back!"
+            android:textColor="@color/dark_blue"
+            android:textSize="34sp"
+            android:textStyle="bold" />
 
+        <!-- Changed from Name to Email -->
         <EditText
-            android:id="@+id/editTextText"
-            android:layout_width="298dp"
-            android:layout_height="45dp"
+            android:id="@+id/login_email"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_marginVertical="10dp"
             android:ems="10"
-            android:hint="Name"
-            android:inputType="text" />
+            android:hint="Email"
+            android:inputType="textEmailAddress"
+            android:autofillHints="emailAddress"
+            android:textColor="@color/grey"
+            android:backgroundTint="@color/dark_blue"/>
 
         <EditText
-            android:id="@+id/editTextTextPassword"
-            android:layout_width="295dp"
-            android:layout_height="45dp"
+            android:id="@+id/login_password"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_marginVertical="10dp"
             android:ems="10"
             android:hint="Password"
-            android:inputType="textPassword" />
+            android:inputType="textPassword"
+            android:textColor="@color/grey"
+            android:backgroundTint="@color/dark_blue"/>
 
         <Button
             android:id="@+id/button_login"
-            android:layout_width="125dp"
-            android:layout_height="50dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_marginVertical="10dp"
-            android:text="Login" />
+            android:backgroundTint="@color/dark_blue"
+            android:text="Login"
+            android:textColor="@color/white" />
 
         <TextView
             android:id="@+id/textView"
@@ -55,15 +67,18 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_marginVertical="10dp"
-            android:text="Don't have an account?" />
+            android:text="Don't have an account?"
+            android:textColor="@color/grey" />
 
         <Button
             android:id="@+id/button_register"
-            android:layout_width="125dp"
-            android:layout_height="50dp"
+            style="?android:attr/borderlessButtonStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_marginVertical="10dp"
-            android:text="Register" />
+            android:text="Register"
+            android:textColor="@color/dark_blue" />
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

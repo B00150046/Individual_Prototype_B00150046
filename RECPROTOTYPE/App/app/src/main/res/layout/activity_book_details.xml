@@ -11,14 +11,26 @@
         android:layout_height="wrap_content"
         android:padding="16dp">
 
+        <TextView
+            android:id="@+id/user_greeting_textview"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:text="Hello, User"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
         <ImageView
             android:id="@+id/book_cover_details"
             android:layout_width="150dp"
             android:layout_height="220dp"
+            android:layout_marginTop="16dp"
             android:scaleType="centerCrop"
             android:src="@drawable/ic_launcher_background"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toBottomOf="@+id/user_greeting_textview" />
 
         <TextView
             android:id="@+id/book_title_details"
@@ -87,15 +99,14 @@
             app:layout_constraintTop_toBottomOf="@+id/book_description" />
 
         <Button
-            android:id="@+id/start_reading_button3"
-            android:layout_width="262dp"
-            android:layout_height="46dp"
-            android:layout_marginTop="108dp"
-            android:text="Start Reading"
+            android:id="@+id/recommend_button"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="Recommend Similar Books"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.495"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/book_description" />
+            app:layout_constraintTop_toBottomOf="@+id/start_reading_button" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>
