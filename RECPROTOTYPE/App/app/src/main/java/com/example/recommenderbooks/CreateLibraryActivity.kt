@@ -7,19 +7,20 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.recommenderbooks.model.Library
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.DocumentReference
 
 class CreateLibraryActivity : AppCompatActivity() {
 
     private lateinit var auth: FirebaseAuth
-    private lateinit var database: FirebaseDatabase
+    private lateinit var firestore: FirebaseFirestore
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_create_library)
 
         auth = FirebaseAuth.getInstance()
-        database = FirebaseDatabase.getInstance()
+        firestore = FirebaseFirestore.getInstance()
 
         val libraryNameEditText = findViewById<EditText>(R.id.edit_library_name)
         val createButton = findViewById<Button>(R.id.btn_create_library)
@@ -38,22 +39,22 @@ class CreateLibraryActivity : AppCompatActivity() {
                 return@setOnClickListener
             }
 
+            // Create a new document in "Library" collection
+            val librariesRef: DocumentReference = firestore.collection("Library").document()
             val library = Library(
+                libraryId = librariesRef.id, // use the Firestore-generated ID
                 userId = user.uid,
                 name = name,
-                bookIds = emptyList() // Starting with an empty list of books
+                books = emptyList() // initialize empty list for books
             )
 
-            val librariesRef = database.getReference("libraries")
-            val newLibraryRef = librariesRef.push()
-            
-            newLibraryRef.setValue(library)
+            librariesRef.set(library)
                 .addOnSuccessListener {
                     Toast.makeText(this, "Library created successfully", Toast.LENGTH_SHORT).show()
                     finish()
                 }
-                .addOnFailureListener {
-                    Toast.makeText(this, "Failed to create library: ${it.message}", Toast.LENGTH_SHORT).show()
+                .addOnFailureListener { e ->
+                    Toast.makeText(this, "Failed to create library: ${e.message}", Toast.LENGTH_SHORT).show()
                 }
         }
     }

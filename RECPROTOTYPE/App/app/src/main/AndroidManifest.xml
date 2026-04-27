@@ -14,36 +14,54 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.RecommenderBooks"
         android:usesCleartextTraffic="true">
+        
         <activity android:name=".LoginActivity"
-            android:exported="true">
-
-
-            <!-- You might need to add an intent-filter here if it's a launcher activity -->
+            android:exported="true"
+            android:launchMode="singleTop">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+            
+            <!-- App Link for Email Link Sign-in (Migration from Dynamic Links) -->
+            <intent-filter android:autoVerify="true">
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data
+                    android:scheme="https"
+                    android:host="individual-major.firebaseapp.com"
+                    android:pathPrefix="/__/auth/handler" />
+            </intent-filter>
         </activity>
+
         <activity
             android:name=".RegisterActivity"
-            android:exported="false">
-        </activity>
-        <activity
-            android:name=".MainActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:parentActivityName=".LoginActivity" />
         <activity
             android:name=".BookDetailsActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:parentActivityName=".DashboardActivity" />
         <activity
             android:name=".ProfileActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:parentActivityName=".DashboardActivity" />
         <activity
             android:name=".DashboardActivity"
             android:exported="false" />
         <activity
             android:name=".RecommenderActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:parentActivityName=".DashboardActivity" />
+        <activity
+            android:name=".CreateLibraryActivity"
+            android:exported="false"
+            android:parentActivityName=".ProfileActivity" />
+        <activity
+            android:name=".LibraryDetailActivity"
+            android:exported="false"
+            android:parentActivityName=".ProfileActivity" />
     </application>
 
 </manifest>

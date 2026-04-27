@@ -17,7 +17,6 @@ import kotlinx.coroutines.launch
 class DashboardActivity : AppCompatActivity() {
 
     private lateinit var auth: FirebaseAuth
-    // Switch to the simpler adapter that handles strings
     private lateinit var recommendedBooksAdapter: RecommendedBookAdapter
     private lateinit var recommendedRecyclerView: RecyclerView
 
@@ -27,7 +26,6 @@ class DashboardActivity : AppCompatActivity() {
 
         auth = FirebaseAuth.getInstance()
 
-        val user = auth.currentUser
         val welcomeTextView = findViewById<TextView>(R.id.welcome_text)
         val profileButton = findViewById<ImageView>(R.id.profile_button)
         val recommenderButton = findViewById<Button>(R.id.recommender_button)
@@ -35,36 +33,31 @@ class DashboardActivity : AppCompatActivity() {
 
         setupRecyclerView()
 
+        val user = auth.currentUser
         if (user != null) {
             val username = user.displayName
-            if (!username.isNullOrEmpty()) {
-                welcomeTextView.text = "Good Morning, $username!"
-            } else {
-                welcomeTextView.text = "Good Morning!"
-            }
-            // Fetch books for the recommended section
+            welcomeTextView.text = if (!username.isNullOrEmpty()) "Good Morning, $username!" else "Good Morning!"
             fetchAndDisplayBooks()
         } else {
-            // If no user is logged in, redirect to the login screen
-            val intent = Intent(this, LoginActivity::class.java)
-            startActivity(intent)
+            startActivity(Intent(this, LoginActivity::class.java))
             finish()
         }
 
         profileButton.setOnClickListener {
-            val intent = Intent(this, ProfileActivity::class.java)
-            startActivity(intent)
+            startActivity(Intent(this, ProfileActivity::class.java))
         }
 
         recommenderButton.setOnClickListener {
-            val intent = Intent(this, RecommenderActivity::class.java)
-            startActivity(intent)
+            startActivity(Intent(this, RecommenderActivity::class.java))
         }
     }
 
     private fun setupRecyclerView() {
-        // Use the adapter designed for strings
-        recommendedBooksAdapter = RecommendedBookAdapter(emptyList())
+        recommendedBooksAdapter = RecommendedBookAdapter(emptyList()) { bookTitle ->
+            val intent = Intent(this, BookDetailsActivity::class.java)
+            intent.putExtra("BOOK_TITLE", bookTitle)
+            startActivity(intent)
+        }
         recommendedRecyclerView.adapter = recommendedBooksAdapter
         recommendedRecyclerView.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
     }
@@ -73,13 +66,10 @@ class DashboardActivity : AppCompatActivity() {
         lifecycleScope.launch {
             try {
                 val response = RetrofitInstance.recommenderApi.getAllBooks()
-                // The response now contains a list of strings
-                val allBookTitles = response.books
-                val titlesToShow = allBookTitles.take(30)
-                // Use the update method for this adapter
+                val titlesToShow = response.books.take(30)
                 recommendedBooksAdapter.updateBooks(titlesToShow)
             } catch (e: Exception) {
-                Log.e("DashboardActivity", "Failed to fetch books (Ask Gemini)", e)
+                Log.e("DashboardActivity", "Failed to fetch books", e)
             }
         }
     }

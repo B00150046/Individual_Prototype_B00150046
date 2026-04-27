@@ -5,4 +5,7 @@
     <color name="light_blue">#E3F2FD</color>
     <color name="dark_blue">#1565C0</color>
     <color name="grey">#424242</color>
+    <color name="like_green">#4CAF50</color>
+    <color name="dislike_red">#F44336</color>
+    <color name="star_yellow">#FFD700</color>
 </resources>

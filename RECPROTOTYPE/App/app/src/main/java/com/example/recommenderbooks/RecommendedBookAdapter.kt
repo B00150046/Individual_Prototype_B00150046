@@ -8,7 +8,10 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 
-class RecommendedBookAdapter(private var books: List<String>) : RecyclerView.Adapter<RecommendedBookAdapter.BookViewHolder>() {
+class RecommendedBookAdapter(
+    private var books: List<String>,
+    private val onBookClick: (String) -> Unit = {}
+) : RecyclerView.Adapter<RecommendedBookAdapter.BookViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BookViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.book_item, parent, false)
@@ -22,6 +25,10 @@ class RecommendedBookAdapter(private var books: List<String>) : RecyclerView.Ada
         Glide.with(holder.itemView.context)
             .load(R.drawable.ic_launcher_background) // Or any other placeholder
             .into(holder.bookImage)
+
+        holder.itemView.setOnClickListener {
+            onBookClick(bookTitle)
+        }
     }
 
     override fun getItemCount() = books.size

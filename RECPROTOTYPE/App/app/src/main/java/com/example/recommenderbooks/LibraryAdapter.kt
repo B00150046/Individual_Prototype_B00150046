@@ -13,18 +13,21 @@ class LibraryAdapter(
 ) : RecyclerView.Adapter<LibraryAdapter.LibraryViewHolder>() {
 
     class LibraryViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val nameTextView: TextView = itemView.findViewById(android.R.id.text1)
+        val nameTextView: TextView = itemView.findViewById(R.id.library_name)
+        val bookCountTextView: TextView = itemView.findViewById(R.id.book_count)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): LibraryViewHolder {
         val view = LayoutInflater.from(parent.context)
-            .inflate(android.R.layout.simple_list_item_1, parent, false)
+            .inflate(R.layout.library_item, parent, false)
         return LibraryViewHolder(view)
     }
 
     override fun onBindViewHolder(holder: LibraryViewHolder, position: Int) {
         val library = libraries[position]
         holder.nameTextView.text = library.name
+        val bookCount = library.books.size
+        holder.bookCountTextView.text = "$bookCount ${if (bookCount == 1) "Book" else "Books"}"
         holder.itemView.setOnClickListener { onItemClick(library) }
     }
 

@@ -2,33 +2,38 @@ package com.example.recommenderbooks
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.widget.Button
 import android.widget.EditText
+import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.UserProfileChangeRequest
+import com.google.firebase.firestore.FirebaseFirestore
 
 class RegisterActivity : AppCompatActivity() {
     private lateinit var auth: FirebaseAuth
+    private lateinit var firestore: FirebaseFirestore
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_register)
 
         auth = FirebaseAuth.getInstance()
+        firestore = FirebaseFirestore.getInstance()
 
         val nameEditText = findViewById<EditText>(R.id.register_name)
         val passwordEditText = findViewById<EditText>(R.id.register_password)
         val emailEditText = findViewById<EditText>(R.id.register_email)
         val registerButton = findViewById<Button>(R.id.button_register)
-        val loginButton = findViewById<Button>(R.id.button_login)
+        val loginButton = findViewById<TextView>(R.id.button_login)
 
         registerButton.setOnClickListener {
             val name = nameEditText.text.toString().trim()
             val password = passwordEditText.text.toString().trim()
             val email = emailEditText.text.toString().trim()
 
-            // Validation
             if (name.isEmpty() || email.isEmpty() || password.isEmpty()) {
                 Toast.makeText(this, "All fields are required", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
@@ -43,27 +48,43 @@ class RegisterActivity : AppCompatActivity() {
                 .addOnCompleteListener { task ->
                     if (task.isSuccessful) {
                         val user = auth.currentUser
+                        val userId = user?.uid
+                        
+                        // Set the display name immediately
                         val profileUpdates = UserProfileChangeRequest.Builder()
                             .setDisplayName(name)
                             .build()
 
-                        // Add a listener to the profile update task
                         user?.updateProfile(profileUpdates)?.addOnCompleteListener { profileTask ->
                             if (profileTask.isSuccessful) {
-                                // Only navigate after the profile is updated
-                                Toast.makeText(this, "Registration successful", Toast.LENGTH_SHORT).show()
-                                val intent = Intent(this, DashboardActivity::class.java) // Navigate to dashboard
-                                startActivity(intent)
-                                finish()
-                            } else {
-                                // Handle profile update failure, but user is still created
-                                Toast.makeText(this, "Registration successful, but failed to set display name.", Toast.LENGTH_LONG).show()
-                                val intent = Intent(this, DashboardActivity::class.java)
-                                startActivity(intent)
-                                finish()
+                                val userProfile = hashMapOf(
+                                    "name" to name,
+                                    "email" to email,
+                                    "userId" to userId,
+                                    "createdAt" to com.google.firebase.Timestamp.now()
+                                )
+
+                                if (userId != null) {
+                                    firestore.collection("users").document(userId)
+                                        .set(userProfile)
+                                        .addOnSuccessListener {
+                                            Toast.makeText(this, "Registration successful", Toast.LENGTH_SHORT).show()
+                                            val intent = Intent(this, DashboardActivity::class.java)
+                                            startActivity(intent)
+                                            finish()
+                                        }
+                                        .addOnFailureListener { e ->
+                                            Log.e("RegisterActivity", "Firestore error: ${e.message}", e)
+                                            // Proceed to dashboard even if firestore fails, as user is authenticated
+                                            val intent = Intent(this, DashboardActivity::class.java)
+                                            startActivity(intent)
+                                            finish()
+                                        }
+                                }
                             }
                         }
                     } else {
+                        Log.e("RegisterActivity", "Auth error: ${task.exception?.message}", task.exception)
                         Toast.makeText(this, "Registration failed: ${task.exception?.message}", Toast.LENGTH_SHORT).show()
                     }
                 }

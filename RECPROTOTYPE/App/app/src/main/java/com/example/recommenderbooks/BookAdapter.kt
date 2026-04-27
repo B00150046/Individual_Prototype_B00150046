@@ -9,14 +9,13 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.example.recommenderbooks.network.Book
+import com.example.recommenderbooks.network.BookMetadata
 
-class BookAdapter : ListAdapter<Book, BookAdapter.BookViewHolder>(BookDiffCallback()) {
+class BookAdapter(private val onBookClick: (String) -> Unit) : ListAdapter<BookMetadata, BookAdapter.BookViewHolder>(BookDiffCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BookViewHolder {
-        // Assumes you have a layout file named 'book_item.xml'
         val view = LayoutInflater.from(parent.context).inflate(R.layout.book_item, parent, false)
-        return BookViewHolder(view)
+        return BookViewHolder(view, onBookClick)
     }
 
     override fun onBindViewHolder(holder: BookViewHolder, position: Int) {
@@ -24,27 +23,28 @@ class BookAdapter : ListAdapter<Book, BookAdapter.BookViewHolder>(BookDiffCallba
         holder.bind(book)
     }
 
-    class BookViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        // Assumes your 'book_item.xml' has an ImageView with id 'book_cover' and a TextView with id 'book_title'
+    class BookViewHolder(itemView: View, private val onBookClick: (String) -> Unit) : RecyclerView.ViewHolder(itemView) {
         private val bookCoverImageView: ImageView = itemView.findViewById(R.id.book_cover)
         private val bookTitleTextView: TextView = itemView.findViewById(R.id.book_title)
 
-        fun bind(book: Book) {
+        fun bind(book: BookMetadata) {
             bookTitleTextView.text = book.name
+            itemView.setOnClickListener { onBookClick(book.name) }
+            
             Glide.with(itemView.context)
                 .load(book.imageUrl)
-                .placeholder(R.drawable.ic_launcher_background) // Default image
+                .placeholder(R.drawable.ic_launcher_background)
                 .into(bookCoverImageView)
         }
     }
 }
 
-class BookDiffCallback : DiffUtil.ItemCallback<Book>() {
-    override fun areItemsTheSame(oldItem: Book, newItem: Book): Boolean {
+class BookDiffCallback : DiffUtil.ItemCallback<BookMetadata>() {
+    override fun areItemsTheSame(oldItem: BookMetadata, newItem: BookMetadata): Boolean {
         return oldItem.id == newItem.id
     }
 
-    override fun areContentsTheSame(oldItem: Book, newItem: Book): Boolean {
+    override fun areContentsTheSame(oldItem: BookMetadata, newItem: BookMetadata): Boolean {
         return oldItem == newItem
     }
 }

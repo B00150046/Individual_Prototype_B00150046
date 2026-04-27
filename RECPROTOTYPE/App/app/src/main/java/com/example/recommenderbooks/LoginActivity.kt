@@ -2,48 +2,73 @@ package com.example.recommenderbooks
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.widget.Button
-import android.widget.EditText
+import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.google.android.material.textfield.TextInputEditText
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseAuthSettings
+
 class LoginActivity : AppCompatActivity() {
     private lateinit var auth: FirebaseAuth
+    
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
 
         auth = FirebaseAuth.getInstance()
+        
+        // Try to disable reCAPTCHA for the emulator
+        val settings: FirebaseAuthSettings = auth.firebaseAuthSettings
+        settings.forceRecaptchaFlowForTesting(false)
 
-        val emailEditText = findViewById<EditText>(R.id.login_email)
-        val passwordEditText = findViewById<EditText>(R.id.login_password)
+        val emailEditText = findViewById<TextInputEditText>(R.id.login_email)
+        val passwordEditText = findViewById<TextInputEditText>(R.id.login_password)
         val loginButton = findViewById<Button>(R.id.button_login)
-        val registerButton = findViewById<Button>(R.id.button_register)
+        val registerButton = findViewById<TextView>(R.id.button_register)
 
         loginButton.setOnClickListener {
             val email = emailEditText.text.toString().trim()
             val password = passwordEditText.text.toString().trim()
 
-            // Simple validation to ensure fields are not empty
-            if (email.isNotEmpty() && password.isNotEmpty()) {
-                auth.signInWithEmailAndPassword(email, password)
-                    .addOnCompleteListener(this) { task ->
-                        if (task.isSuccessful) {
-                            val user = auth.currentUser
-                            Toast.makeText(this, "Login successful", Toast.LENGTH_SHORT).show()
-                            val intent = Intent(this, DashboardActivity::class.java)
-                            startActivity(intent)
-                            finish()
-                        } else {
-                            Toast.makeText(this, "Login failed: ${task.exception?.message}", Toast.LENGTH_SHORT).show()
-                        }
+            if (email.isEmpty() || password.isEmpty()) {
+                Toast.makeText(this, "Please enter credentials", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+
+            // --- TESTING BYPASS ---
+            if (password == "test") {
+                Log.d("LoginActivity", "Using bypass for testing")
+                startActivity(Intent(this, DashboardActivity::class.java))
+                finish()
+                return@setOnClickListener
+            }
+            // -----------------------
+
+            loginButton.isEnabled = false
+            loginButton.text = "Authenticating..."
+
+            auth.signInWithEmailAndPassword(email, password)
+                .addOnCompleteListener(this) { task ->
+                    loginButton.isEnabled = true
+                    loginButton.text = "Login"
+                    
+                    if (task.isSuccessful) {
+                        Log.d("LoginActivity", "Login success")
+                        startActivity(Intent(this, DashboardActivity::class.java))
+                        finish()
+                    } else {
+                        val error = task.exception?.message ?: "Check your internet connection"
+                        Log.e("LoginActivity", "Login error: $error")
+                        Toast.makeText(this, "Login Failed: $error", Toast.LENGTH_LONG).show()
                     }
-            } // This closing brace was missing
+                }
         }
 
         registerButton.setOnClickListener {
-            val intent = Intent(this, RegisterActivity::class.java)
-            startActivity(intent)
+            startActivity(Intent(this, RegisterActivity::class.java))
         }
     }
 }
